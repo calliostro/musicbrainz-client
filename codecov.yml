@@ -1,0 +1,5 @@
+coverage_comment_always: true
+comment:
+  layout: "reach,diff,flags,files,footer"
+  behavior: default
+  require_changes: false
