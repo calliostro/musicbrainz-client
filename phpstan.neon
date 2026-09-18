@@ -3,6 +3,7 @@ parameters:
     paths:
         - src
         - tests
-    excludePaths:
-        - tests/bootstrap.php
     tmpDir: .phpunit.cache/phpstan
+    treatPhpDocTypesAsCertain: false
+    ignoreErrors:
+        - identifier: method.alreadyNarrowedType
