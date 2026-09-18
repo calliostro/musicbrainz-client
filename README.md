@@ -1,16 +1,16 @@
-# ⚡ MusicBrainz API Client for PHP 8.1+ – Lightweight with Maximum Developer Comfort
+# MusicBrainz API Client for PHP 8.1+
 
 [![Package Version](https://img.shields.io/packagist/v/calliostro/musicbrainz-client.svg)](https://packagist.org/packages/calliostro/musicbrainz-client)
 [![Total Downloads](https://img.shields.io/packagist/dt/calliostro/musicbrainz-client.svg)](https://packagist.org/packages/calliostro/musicbrainz-client)
 [![License](https://poser.pugx.org/calliostro/musicbrainz-client/license)](https://packagist.org/packages/calliostro/musicbrainz-client)
 [![PHP Version](https://img.shields.io/badge/php-%5E8.1-blue.svg)](https://php.net)
-[![Guzzle](https://img.shields.io/badge/guzzle-%5E6.5%7C%5E7.0-orange.svg)](https://docs.guzzlephp.org/)
+[![Guzzle](https://img.shields.io/badge/guzzle-%5E7.0%20%7C%7C%20%5E8.0-orange.svg)](https://docs.guzzlephp.org/)
 [![CI](https://github.com/calliostro/musicbrainz-client/actions/workflows/ci.yml/badge.svg)](https://github.com/calliostro/musicbrainz-client/actions/workflows/ci.yml)
 [![Code Coverage](https://codecov.io/gh/calliostro/musicbrainz-client/graph/badge.svg)](https://codecov.io/gh/calliostro/musicbrainz-client)
 [![PHPStan Level](https://img.shields.io/badge/PHPStan-level%208-brightgreen.svg)](https://phpstan.org/)
 [![Code Style](https://img.shields.io/badge/code%20style-PSR12-brightgreen.svg)](https://github.com/FriendsOfPHP/PHP-CS-Fixer)
 
-> **🚀 MINIMAL YET POWERFUL!** Focused, lightweight MusicBrainz API client — as compact as possible while maintaining modern PHP comfort and clean APIs.
+A lightweight, modern PHP client for the [MusicBrainz API](https://musicbrainz.org/doc/MusicBrainz_API), supporting lookups, browse, searches, and authenticated write operations for PHP 8.1+.
 
 ## 📦 Installation
 
@@ -18,16 +18,7 @@
 composer require calliostro/musicbrainz-client
 ```
 
-## ✨ Features
-
-- 🎯 **Complete API Coverage** — All MusicBrainz API v2 endpoints supported (50+ operations)
-- 📖 **Read & Write Operations** — Both lookup/search and authenticated operations (ratings, tags, collections)
-- 🚀 **Lightweight** — Minimal dependencies (only Guzzle)
-- 🔒 **Type-safe** — Full PHP 8.1+ type hints and strict types
-- 📚 **Well-documented** — PHPDoc with all methods and parameters
-- ⚡ **Performance** — Optimized configuration caching
-- 🧪 **100% Tested** — Comprehensive unit tests with full code coverage
-- 🎨 **PSR-12** — Follows modern PHP coding standards
+---
 
 ## 🚀 Quick Start
 
@@ -68,6 +59,9 @@ $recordings = $mb->searchRecordings('recording:"Levitating" AND artist:"Dua Lipa
 ```
 
 ### With Authentication (For Write Operations)
+
+> [!NOTE]
+> Credentials are **only** required for write operations (ratings, tags, collections). Public queries (lookups, searches, browsing) do not require authentication, and credentials do **not** increase the rate limit.
 
 ```php
 use Calliostro\MusicBrainz\MusicBrainzClientFactory;
@@ -114,13 +108,36 @@ $mb->removeReleasesFromCollection(
 
 ### Custom User-Agent
 
-MusicBrainz requires proper User-Agent identification. By default, the client includes a User-Agent, but you can customize it:
+MusicBrainz strictly requires proper User-Agent identification (`AppName/Version (Contact-URL-or-Email)`). By default, the client includes a default User-Agent, but you can customize it:
 
 ```php
 $mb = MusicBrainzClientFactory::createWithUserAgent(
     'MyApp/1.0.0 (https://myapp.com)'
 );
 ```
+
+---
+
+## ✨ Key Features
+
+- **Complete API Coverage** – All MusicBrainz API v2 endpoints supported (50+ operations).
+- **Built-in Resilience** – Automatic retries on `503 Service Temporarily Unavailable` and `429` rate limits.
+- **Read & Write Operations** – Both lookup/search and authenticated operations (ratings, tags, collections).
+- **Clean Parameter API** – Full support for PHP 8 named parameters and camelCase conversion.
+- **Lightweight Focus** – Minimal dependencies with only Guzzle (7.x or 8.x).
+- **Type Safety** – Full PHP 8.1+ type hints and strict types throughout.
+- **Performance** – Optimized configuration caching singleton.
+- **Modern PHP Comfort** – Full IDE auto-completion, PHPStan Level 8 static analysis, and PSR-12 compliant.
+- **Battle-Tested** – Comprehensive test suite with full code coverage.
+
+---
+
+## 📋 Requirements
+
+- **PHP** `^8.1`
+- **guzzlehttp/guzzle** `^7.0 || ^8.0`
+
+---
 
 ## 📖 API Methods
 
@@ -281,30 +298,34 @@ $places = $mb->browsePlaces(area: $areaMbid, limit: 25);
 $places = $mb->searchPlaces('Madison Square Garden');
 ```
 
+---
+
 ## 📚 Complete API Reference
 
 ### Read Operations (No Authentication Required)
 
-**Artist**: `lookupArtist`, `browseArtists`, `searchArtists`  
-**Release**: `lookupRelease`, `browseReleases`, `searchReleases`  
-**Release Group**: `lookupReleaseGroup`, `browseReleaseGroups`, `searchReleaseGroups`  
-**Recording**: `lookupRecording`, `browseRecordings`, `searchRecordings`  
-**Label**: `lookupLabel`, `browseLabels`, `searchLabels`  
-**Work**: `lookupWork`, `browseWorks`, `searchWorks`  
-**Area**: `lookupArea`, `searchAreas`  
-**Genre**: `lookupGenre`, `searchGenres`  
-**Instrument**: `lookupInstrument`, `searchInstruments`  
-**Series**: `lookupSeries`, `searchSeries`  
-**Event**: `lookupEvent`, `browseEvents`, `searchEvents`  
-**Place**: `lookupPlace`, `browsePlaces`, `searchPlaces`  
-**ISRC**: `lookupIsrc`  
-**URL**: `lookupUrl`, `searchUrls`
+- **Artist**: `lookupArtist()`, `browseArtists()`, `searchArtists()`
+- **Release**: `lookupRelease()`, `browseReleases()`, `searchReleases()`
+- **Release Group**: `lookupReleaseGroup()`, `browseReleaseGroups()`, `searchReleaseGroups()`
+- **Recording**: `lookupRecording()`, `browseRecordings()`, `searchRecordings()`
+- **Label**: `lookupLabel()`, `browseLabels()`, `searchLabels()`
+- **Work**: `lookupWork()`, `browseWorks()`, `searchWorks()`
+- **Area**: `lookupArea()`, `searchAreas()`
+- **Genre**: `lookupGenre()`, `searchGenres()`
+- **Instrument**: `lookupInstrument()`, `searchInstruments()`
+- **Series**: `lookupSeries()`, `searchSeries()`
+- **Event**: `lookupEvent()`, `browseEvents()`, `searchEvents()`
+- **Place**: `lookupPlace()`, `browsePlaces()`, `searchPlaces()`
+- **ISRC**: `lookupIsrc()`
+- **URL**: `lookupUrl()`, `searchUrls()`
 
 ### Write Operations (Authentication Required)
 
-**Ratings**: `submitRating` - Rate artists, releases, recordings, release-groups, works, labels, events, places, series, or instruments (0-100, 0 removes rating)  
-**Tags**: `submitTags` - Add tags to artists, releases, recordings, release-groups, works, labels, areas, events, places, series, or instruments  
-**Collections**: `getUserCollections`, `getCollectionReleases`, `addReleasesToCollection`, `removeReleasesFromCollection`
+- **Ratings**: `submitRating()` – Rate artists, releases, recordings, release-groups, works, labels, events, places, series, or instruments (0-100, 0 removes rating)
+- **Tags**: `submitTags()` – Add tags to artists, releases, recordings, release-groups, works, labels, areas, events, places, series, or instruments
+- **Collections**: `getUserCollections()`, `getCollectionReleases()`, `addReleasesToCollection()`, `removeReleasesFromCollection()`
+
+---
 
 ## 🎯 Parameter Styles
 
@@ -333,39 +354,46 @@ $params = [
 $releases = $mb->browseReleases($params);
 ```
 
-## 🔧 Advanced Configuration
+---
 
-### Rate Limiting
+## ⚙️ Configuration
 
-MusicBrainz has rate limiting (one request per second). Consider implementing rate limiting in your application:
+### Rate Limiting & Retries
+
+MusicBrainz enforces a rate limit of one request per second and returns `503 Service Temporarily Unavailable` (or `429 Too Many Requests`) when busy. By default (`auto_retry => true`, `max_retries => 3`), the client automatically retries temporary `503` and `429` responses with intelligent exponential backoff and respects the `Retry-After` header.
+
+You can customize or disable retries:
 
 ```php
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Middleware;
+use Calliostro\MusicBrainz\MusicBrainzClientFactory;
 
-$stack = HandlerStack::create();
-$stack->push(Middleware::retry(function ($retries, $request, $response, $exception) {
-    if ($response && $response->getStatusCode() === 503) {
-        return $retries < 3; // Retry up to 3 times on 503 errors
-    }
-    return false;
-}));
-
+// Custom retry count
 $mb = MusicBrainzClientFactory::create([
-    'handler' => $stack,
-    'timeout' => 10,
+    'auto_retry' => true,   // Automatically wait and retry on 429/503 (default: true)
+    'max_retries' => 5,     // Maximum number of retry attempts (default: 3)
+]);
+
+// Disable automatic retries (e.g. in tests or to handle exceptions immediately)
+$mb = MusicBrainzClientFactory::create([
+    'auto_retry' => false,
 ]);
 ```
 
-### Custom Guzzle Options
+### Advanced (Custom Guzzle handler, timeouts, headers)
 
 ```php
+use Calliostro\MusicBrainz\MusicBrainzClientFactory;
+
 $mb = MusicBrainzClientFactory::create([
     'timeout' => 30,
     'proxy' => 'http://proxy.example.com:8080',
     'verify' => true,
+    'auto_retry' => true,
+    'max_retries' => 3,
 ]);
 ```
+
+---
 
 ## 📝 Response Format
 
@@ -384,34 +412,7 @@ foreach ($artist['life-span'] as $key => $value) {
 }
 ```
 
-## 🧪 Testing
-
-```bash
-# Run unit tests
-composer test
-
-# Run integration tests (requires internet connection)
-composer test-integration
-
-# Run all tests
-composer test-all
-
-# Generate coverage report
-composer test-coverage
-```
-
-## 🔍 Code Quality
-
-```bash
-# Check code style
-composer cs
-
-# Fix code style
-composer cs-fix
-
-# Run static analysis
-composer analyse
-```
+---
 
 ## 📚 Resources
 
@@ -420,20 +421,40 @@ composer analyse
 - [MusicBrainz Rate Limiting](https://musicbrainz.org/doc/MusicBrainz_API/Rate_Limiting)
 - [MusicBrainz Database](https://musicbrainz.org/)
 
+---
+
+## 🧪 Development & Testing Guide
+
+See [DEVELOPMENT.md](DEVELOPMENT.md) for detailed setup instructions, test suite commands, static analysis, and contribution guidelines.
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please ensure all tests pass and coding standards are maintained:
+
+```bash
+composer cs-fix
+composer analyse
+composer test
+```
+
+---
+
 ## 📄 License
 
 MIT License – see the [LICENSE](LICENSE) file for details.
 
-## 🤝 Contributing
+---
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+## ⚖️ Disclaimer
 
-## 🙏 Acknowledgments
-
-- [MusicBrainz](https://musicbrainz.org/) for providing the excellent open music encyclopedia and metadata API
-- [Guzzle](https://docs.guzzlephp.org/) for the robust HTTP client
-- The PHP community for continuous inspiration
+MusicBrainz is a registered trademark of the MetaBrainz Foundation. This project is an independent, unofficial open-source library and is not affiliated with, endorsed by, or sponsored by the MetaBrainz Foundation.
 
 ---
 
-> ⭐ **Star this repo if you find it useful!**
+## 🙏 Acknowledgments
+
+- [MusicBrainz](https://musicbrainz.org/) for providing the excellent open music encyclopedia and metadata API.
+- [Guzzle](https://docs.guzzlephp.org/) for the rock-solid HTTP transport.
+- Sister projects: [`calliostro/php-discogs-api`](https://github.com/calliostro/php-discogs-api), [`calliostro/lastfm-client`](https://github.com/calliostro/lastfm-client), and [`calliostro/spotify-client`](https://github.com/calliostro/spotify-client).

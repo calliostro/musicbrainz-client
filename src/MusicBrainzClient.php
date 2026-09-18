@@ -115,11 +115,8 @@ final class MusicBrainzClient
         if ($optionsOrClient instanceof GuzzleClient) {
             $this->client = $optionsOrClient;
         } else {
-            $clientOptions = array_merge([
-                'base_uri' => $this->config['baseUrl'],
-                'headers' => $this->config['client']['options']['headers'],
-            ], $optionsOrClient);
-            $this->client = new GuzzleClient($clientOptions);
+            $client = MusicBrainzClientFactory::create($optionsOrClient);
+            $this->client = $client->client;
         }
     }
 
@@ -177,6 +174,7 @@ final class MusicBrainzClient
         }
 
         $parameterNames = array_keys($this->config['operations'][$operationName]['parameters']);
+        /** @var array<string, mixed> $params */
         $params = [];
         $allowedCamelParams = $this->getAllowedCamelCaseParams($operationName);
         $maxParams = count($parameterNames);
@@ -196,7 +194,8 @@ final class MusicBrainzClient
             } else {
                 // Positional parameter
                 if ($key < $maxParams && isset($parameterNames[$key])) {
-                    $params[$parameterNames[$key]] = $value;
+                    $paramName = (string)$parameterNames[$key];
+                    $params[$paramName] = $value;
                 }
             }
         }
