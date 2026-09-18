@@ -15,4 +15,5 @@ return (new PhpCsFixer\Config())
         '@PSR12' => true,
     ])
     ->setFinder($finder)
-    ->setRiskyAllowed(true);
+    ->setRiskyAllowed(true)
+    ->setUnsupportedPhpVersionAllowed(true);
